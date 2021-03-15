@@ -6,22 +6,18 @@
       width="300"
       height="200"
       :style="{ backgroundColor: `hsl(${hue}, 100%, 50%)` }"
-      @mousedown="clickPos"
+      @mousedown="isMouseDown = true"
+      @mousemove="newMarkerPos"
+      @mouseup="isMouseDown = false"
     >
       <defs>
         <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
-          <stop
-            offset="0%"
-            style="stop-color:rgb(255,255,255);stop-opacity:1"
-          />
-          <stop
-            offset="100%"
-            style="stop-color:rgb(255,255,255);stop-opacity:0"
-          />
+          <stop offset="0%" style="stop-color:rgba(255,255,255,1)" />
+          <stop offset="100%" style="stop-color:rgba(255,255,255,0)" />
         </linearGradient>
         <linearGradient id="brightness" x1="0%" y1="100%" x2="0%" y2="0%">
-          <stop offset="0%" style="stop-color:rgb(0,0,0);stop-opacity:1" />
-          <stop offset="100%" style="stop-color:rgb(0,0,0);stop-opacity:0" />
+          <stop offset="0%" style="stop-color:rgba(0,0,0,1)" />
+          <stop offset="100%" style="stop-color:rgba(0,0,0,0)" />
         </linearGradient>
       </defs>
       <rect width="100%" height="100%" fill="url(#saturation)" />
@@ -53,20 +49,23 @@ export default defineComponent({
     return {
       hue: 180,
       saturation: 50,
-      brightness: 25
+      brightness: 25,
+      isMouseDown: false
     };
   },
   methods: {
-    clickPos(e: any) {
-      const colorBox = document.querySelector("#color-box");
-      const marker = document.querySelector("#marker");
-      if (colorBox !== null && marker !== null) {
-        const clickX = (e.layerX / colorBox.clientWidth) * 100;
-        const clickY = (e.layerY / colorBox.clientHeight) * 100;
-        marker.attributes[1].value = `${clickX}%`;
-        marker.attributes[2].value = `${clickY}%`;
-        this.saturation = Math.round(clickX);
-        this.brightness = Math.round(50 - clickY / 2);
+    newMarkerPos(e: any) {
+      if (this.isMouseDown) {
+        const colorBox = document.querySelector("#color-box");
+        const marker = document.querySelector("#marker");
+        if (colorBox !== null && marker !== null) {
+          const clickX = (e.layerX / colorBox.clientWidth) * 100;
+          const clickY = (e.layerY / colorBox.clientHeight) * 100;
+          marker.attributes[1].value = `${clickX}%`;
+          marker.attributes[2].value = `${clickY}%`;
+          this.saturation = Math.round(clickX);
+          this.brightness = Math.round(50 - clickY / 2);
+        }
       }
     }
   },
