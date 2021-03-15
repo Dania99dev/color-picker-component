@@ -9,6 +9,7 @@
       @mousedown="isMouseDown = true"
       @mousemove="newMarkerPos"
       @mouseup="isMouseDown = false"
+      @touchstart="(isMouseDown = true), newMarkerPos"
     >
       <defs>
         <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
