@@ -32,6 +32,15 @@
         stroke-width="2"
         fill="transparent"
       />
+      <circle
+        id="marker"
+        :cx="`${saturation}%`"
+        :cy="`${100 - brightness}%`"
+        r="4"
+        stroke="black"
+        stroke-width="2"
+        fill="transparent"
+      />
     </svg>
     <input type="range" name="hue" id="hue" v-model="hue" min="0" max="360" />
     <div class="color-inputs">
@@ -112,6 +121,7 @@ export default defineComponent({
   border-radius: 0.5rem;
   display: flex;
   flex-direction: column;
+  font-size: 0.875rem;
 }
 #hue {
   appearance: none;
@@ -142,7 +152,7 @@ export default defineComponent({
   width: 14px;
   height: 14px;
   border-radius: 50%;
-  border: 3px solid white;
+  border: 2px solid white;
   cursor: grab;
 }
 #hue::-webkit-slider-thumb:active {
