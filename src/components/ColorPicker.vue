@@ -25,7 +25,7 @@
       <circle
         id="marker"
         :cx="`${saturation}%`"
-        :cy="`${100 - brightness * 2}%`"
+        :cy="`${100 - brightness}%`"
         r="6"
         stroke="white"
         stroke-width="2"
@@ -41,7 +41,7 @@
         S<input type="number" v-model="saturation" min="0" max="100" />
       </div>
       <div class="color-prop brightness-number-input">
-        B<input type="number" v-model="brightness" min="0" max="50" />
+        B<input type="number" v-model="brightness" min="0" max="100" />
       </div>
     </div>
   </div>
@@ -54,7 +54,7 @@ export default defineComponent({
     return {
       hue: 360,
       saturation: 100,
-      brightness: 50,
+      brightness: 100,
       isMouseDown: false
     };
   },
@@ -67,7 +67,7 @@ export default defineComponent({
           const clickX = (e.layerX / colorBox.clientWidth) * 100;
           const clickY = (e.layerY / colorBox.clientHeight) * 100;
           this.saturation = Math.round(clickX);
-          this.brightness = Math.round(50 - clickY / 2);
+          this.brightness = Math.round(100 - clickY);
         }
       }
     }
@@ -75,8 +75,24 @@ export default defineComponent({
   computed: {
     selectedColor: function(): object {
       return {
-        backgroundColor: `hsl(${this.hue}, ${this.saturation}%, ${this.brightness}%)`
+        backgroundColor: `hsl(${this.hue}, ${this.computedSaturation *
+          100}%, ${this.computedLightness * 100}%)`
       };
+    },
+    computedLightness: function(): number {
+      return parseFloat(
+        ((this.brightness / 100) * (1 - this.saturation / 200)).toFixed(2)
+      );
+    },
+    computedSaturation: function(): number {
+      if (this.computedLightness === 0 || this.computedLightness === 1) {
+        return 0;
+      } else {
+        return (
+          (this.brightness / 100 - this.computedLightness) /
+          Math.min(this.computedLightness, 1 - this.computedLightness)
+        );
+      }
     }
   }
 });
