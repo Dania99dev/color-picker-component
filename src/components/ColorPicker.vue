@@ -5,7 +5,7 @@
       id="color-box"
       width="250"
       height="200"
-      :style="{ backgroundColor: `hsl(${hue}, 100%, 50%)` }"
+      :style="{ backgroundColor: `hsl(${hsb.h}, 100%, 50%)` }"
       @mousedown="isMouseDown = true"
       @mousemove="newMarkerPos"
       @mouseup="isMouseDown = false"
@@ -25,8 +25,8 @@
       <rect width="100%" height="100%" fill="url(#brightness)" />
       <circle
         id="marker"
-        :cx="`${saturation}%`"
-        :cy="`${100 - brightness}%`"
+        :cx="`${hsb.s}%`"
+        :cy="`${100 - hsb.b}%`"
         r="6"
         stroke="white"
         stroke-width="2"
@@ -34,24 +34,24 @@
       />
       <circle
         id="marker"
-        :cx="`${saturation}%`"
-        :cy="`${100 - brightness}%`"
+        :cx="`${hsb.s}%`"
+        :cy="`${100 - hsb.b}%`"
         r="4"
         stroke="black"
         stroke-width="2"
         fill="transparent"
       />
     </svg>
-    <input type="range" name="hue" id="hue" v-model="hue" min="0" max="360" />
+    <input type="range" name="hue" id="hue" v-model="hsb.h" min="0" max="360" />
     <div class="color-inputs">
       <div class="color-prop hue-number-input">
-        H<input type="number" v-model="hue" min="0" max="360" />
+        H<input type="number" v-model="hsb.h" min="0" max="360" />
       </div>
       <div class="color-prop saturation-number-input">
-        S<input type="number" v-model="saturation" min="0" max="100" />
+        S<input type="number" v-model="hsb.s" min="0" max="100" />
       </div>
       <div class="color-prop brightness-number-input">
-        B<input type="number" v-model="brightness" min="0" max="100" />
+        B<input type="number" v-model="hsb.b" min="0" max="100" />
       </div>
     </div>
   </div>
@@ -62,9 +62,16 @@ export default defineComponent({
   name: "ColorPicker",
   data() {
     return {
-      hue: 360,
-      saturation: 100,
-      brightness: 100,
+      hsb: {
+        h: 360,
+        s: 100,
+        b: 100
+      },
+      hsl: {
+        h: 0,
+        s: 100,
+        l: 50
+      },
       isMouseDown: false
     };
   },
@@ -76,8 +83,8 @@ export default defineComponent({
         if (colorBox !== null && marker !== null) {
           const clickX = (e.layerX / colorBox.clientWidth) * 100;
           const clickY = (e.layerY / colorBox.clientHeight) * 100;
-          this.saturation = Math.round(clickX);
-          this.brightness = Math.round(100 - clickY);
+          this.hsb.s = Math.round(clickX);
+          this.hsb.b = Math.round(100 - clickY);
         }
       }
     }
@@ -85,13 +92,13 @@ export default defineComponent({
   computed: {
     selectedColor: function(): object {
       return {
-        backgroundColor: `hsl(${this.hue}, ${this.computedSaturation *
+        backgroundColor: `hsl(${this.hsb.h}, ${this.computedSaturation *
           100}%, ${this.computedLightness * 100}%)`
       };
     },
     computedLightness: function(): number {
       return parseFloat(
-        ((this.brightness / 100) * (1 - this.saturation / 200)).toFixed(2)
+        ((this.hsb.b / 100) * (1 - this.hsb.s / 200)).toFixed(2)
       );
     },
     computedSaturation: function(): number {
@@ -99,7 +106,7 @@ export default defineComponent({
         return 0;
       } else {
         return (
-          (this.brightness / 100 - this.computedLightness) /
+          (this.hsb.b / 100 - this.computedLightness) /
           Math.min(this.computedLightness, 1 - this.computedLightness)
         );
       }
