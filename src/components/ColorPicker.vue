@@ -85,31 +85,37 @@ export default defineComponent({
           const clickY = (e.offsetY / colorBox.clientHeight) * 100;
           this.hsb.s = Math.round(clickX);
           this.hsb.b = Math.round(100 - clickY);
+          this.hsl.h = this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).h;
+          this.hsl.s =
+            this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).s * 100;
+          this.hsl.l =
+            this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).l * 100;
         }
       }
+    },
+    HSBtoHSL(h: number, s: number, b: number) {
+      const hue = h;
+      let saturation;
+      const lightness = parseFloat(((b / 100) * (1 - s / 200)).toFixed(2));
+      if (lightness === 0 || lightness === 1) {
+        saturation = 0;
+      } else {
+        saturation = (b / 100 - lightness) / Math.min(lightness, 1 - lightness);
+      }
+      return {
+        h: hue,
+        s: saturation,
+        l: lightness
+      };
     }
   },
   computed: {
     selectedColor: function(): object {
       return {
-        backgroundColor: `hsl(${this.hsb.h}, ${this.computedSaturation *
-          100}%, ${this.computedLightness * 100}%)`
+        backgroundColor: `hsl(${this.hsl.h}, ${Math.round(
+          this.hsl.s
+        )}%, ${Math.round(this.hsl.l)}%)`
       };
-    },
-    computedLightness: function(): number {
-      return parseFloat(
-        ((this.hsb.b / 100) * (1 - this.hsb.s / 200)).toFixed(2)
-      );
-    },
-    computedSaturation: function(): number {
-      if (this.computedLightness === 0 || this.computedLightness === 1) {
-        return 0;
-      } else {
-        return (
-          (this.hsb.b / 100 - this.computedLightness) /
-          Math.min(this.computedLightness, 1 - this.computedLightness)
-        );
-      }
     }
   }
 });
