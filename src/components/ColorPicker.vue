@@ -76,13 +76,13 @@ export default defineComponent({
     };
   },
   methods: {
-    newMarkerPos(e: any) {
+    newMarkerPos(e: MouseEvent) {
       if (this.isMouseDown) {
         const colorBox = document.querySelector("#color-box");
         const marker = document.querySelector("#marker");
         if (colorBox !== null && marker !== null) {
-          const clickX = (e.layerX / colorBox.clientWidth) * 100;
-          const clickY = (e.layerY / colorBox.clientHeight) * 100;
+          const clickX = (e.offsetX / colorBox.clientWidth) * 100;
+          const clickY = (e.offsetY / colorBox.clientHeight) * 100;
           this.hsb.s = Math.round(clickX);
           this.hsb.b = Math.round(100 - clickY);
         }
