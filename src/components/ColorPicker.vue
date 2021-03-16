@@ -3,13 +3,12 @@
   <div class="container">
     <svg
       id="color-box"
-      width="250"
-      height="200"
+      :width="colorBoxWidth"
+      :height="colorBoxHeight"
       :style="{ backgroundColor: `hsl(${hsb.h}, 100%, 50%)` }"
       @mousedown="isMouseDown = true"
       @mousemove="newMarkerPos"
       @mouseup="isMouseDown = false"
-      @touchstart="(isMouseDown = true), newMarkerPos"
     >
       <defs>
         <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -24,7 +23,7 @@
       <rect width="100%" height="100%" fill="url(#saturation)" />
       <rect width="100%" height="100%" fill="url(#brightness)" />
       <circle
-        id="marker"
+        id="white-marker"
         :cx="`${hsb.s}%`"
         :cy="`${100 - hsb.b}%`"
         r="6"
@@ -33,7 +32,7 @@
         fill="transparent"
       />
       <circle
-        id="marker"
+        id="black-marker"
         :cx="`${hsb.s}%`"
         :cy="`${100 - hsb.b}%`"
         r="4"
@@ -42,16 +41,19 @@
         fill="transparent"
       />
     </svg>
-    <input type="range" name="hue" id="hue" v-model="hsb.h" min="0" max="360" />
+    <input type="range" id="hue" v-model="hsb.h" min="0" max="360" />
     <div class="color-inputs">
-      <div class="color-prop hue-number-input">
-        H<input type="number" v-model="hsb.h" min="0" max="360" />
+      <div class="color-prop">
+        <p>H</p>
+        <input type="number" v-model="hsb.h" min="0" max="360" />
       </div>
-      <div class="color-prop saturation-number-input">
-        S<input type="number" v-model="hsb.s" min="0" max="100" />
+      <div class="color-prop">
+        <p>S</p>
+        <input type="number" v-model="hsb.s" min="0" max="100" />
       </div>
-      <div class="color-prop brightness-number-input">
-        B<input type="number" v-model="hsb.b" min="0" max="100" />
+      <div class="color-prop">
+        <p>B</p>
+        <input type="number" v-model="hsb.b" min="0" max="100" />
       </div>
     </div>
   </div>
@@ -68,42 +70,44 @@ export default defineComponent({
         b: 100
       },
       hsl: {
-        h: 0,
+        h: 360,
         s: 100,
         l: 50
       },
-      isMouseDown: false
+      isMouseDown: false,
+      colorBoxWidth: 250,
+      colorBoxHeight: 200
     };
   },
   methods: {
     newMarkerPos(e: MouseEvent) {
       if (this.isMouseDown) {
-        const colorBox = document.querySelector("#color-box");
-        const marker = document.querySelector("#marker");
-        if (colorBox !== null && marker !== null) {
-          const clickX = (e.offsetX / colorBox.clientWidth) * 100;
-          const clickY = (e.offsetY / colorBox.clientHeight) * 100;
-          this.hsb.s = Math.round(clickX);
-          this.hsb.b = Math.round(100 - clickY);
-          this.hsl.h = this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).h;
-          this.hsl.s =
-            this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).s * 100;
-          this.hsl.l =
-            this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b).l * 100;
-        }
+        const mouseX = (e.offsetX / this.colorBoxWidth) * 100;
+        const mouseY = (e.offsetY / this.colorBoxHeight) * 100;
+        this.hsb.s = Math.round(mouseX) <= 100 ? Math.round(mouseX) : 100;
+        this.hsb.b =
+          Math.round(100 - mouseY) <= 100 ? Math.round(100 - mouseY) : 100;
       }
     },
     HSBtoHSL(h: number, s: number, b: number) {
-      const hue = h;
+      // Takes hsb where h[0, 360] s[0, 100] b[0, 100]
+      // Returns hsl where h[0, 360] l[0, 100] l[0, 100]
       let saturation;
-      const lightness = parseFloat(((b / 100) * (1 - s / 200)).toFixed(2));
+      let lightness = parseFloat(((b / 100) * (1 - s / 200)).toFixed(2));
       if (lightness === 0 || lightness === 1) {
         saturation = 0;
       } else {
         saturation = (b / 100 - lightness) / Math.min(lightness, 1 - lightness);
       }
+
+      saturation =
+        Math.round(saturation * 100) <= 100
+          ? Math.round(saturation * 100)
+          : 100;
+      lightness =
+        Math.round(lightness * 100) <= 100 ? Math.round(lightness * 100) : 100;
       return {
-        h: hue,
+        h: h,
         s: saturation,
         l: lightness
       };
@@ -111,10 +115,9 @@ export default defineComponent({
   },
   computed: {
     selectedColor: function(): object {
+      const hsl = this.HSBtoHSL(this.hsb.h, this.hsb.s, this.hsb.b);
       return {
-        backgroundColor: `hsl(${this.hsl.h}, ${Math.round(
-          this.hsl.s
-        )}%, ${Math.round(this.hsl.l)}%)`
+        backgroundColor: `hsl(${hsl.h}, ${hsl.s}%, ${hsl.l}%)`
       };
     }
   }
@@ -162,8 +165,8 @@ export default defineComponent({
 }
 #hue::-webkit-slider-thumb {
   appearance: none;
-  width: 14px;
-  height: 14px;
+  width: 12px;
+  height: 12px;
   border-radius: 50%;
   border: 2px solid white;
   cursor: grab;
