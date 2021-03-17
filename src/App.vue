@@ -7,7 +7,7 @@
         @click="colorPickerVisibility = !colorPickerVisibility"
       ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
-        <ColorPickerV2 colorBoxWidth="250" colorBoxHeight="200" />
+        <ColorPickerV2 :colorBoxWidth="250" :colorBoxHeight="200" />
       </div>
     </div>
   </div>
