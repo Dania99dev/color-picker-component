@@ -1,17 +1,23 @@
 <template>
-  <h1>Color picker Component for vue</h1>
-  <ColorPicker />
+  <div id="app-container">
+    <h1>ColorPicker Component vue.js</h1>
+    <div id="selected-color">
+      <div id="color-picker">
+        <ColorPickerV2 />
+      </div>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import ColorPicker from "@/components/ColorPicker.vue";
+import ColorPickerV2 from "@/components/ColorPickerV2.vue";
 
 export default defineComponent({
   name: "App",
   components: {
-    ColorPicker
+    ColorPickerV2
   }
 });
 </script>
@@ -27,10 +33,28 @@ export default defineComponent({
     sans-serif, Apple Color Emoji, Segoe UI Emoji;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+#app-container {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
-  height: 100vh;
+  min-height: 100vh;
+  width: 100%;
+  padding: 2rem;
+}
+#selected-color {
+  width: 50px;
+  height: 50px;
+  background-color: crimson;
+  margin: 1rem;
+  position: relative;
+}
+#selected-color:hover {
+  cursor: pointer;
+}
+#color-picker {
+  position: absolute;
+  left: 110%;
+  top: 10%;
 }
 </style>
