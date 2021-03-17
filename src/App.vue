@@ -1,10 +1,11 @@
 <template>
   <div id="app-container">
     <h1>ColorPicker Component vue.js</h1>
-    <div
-      id="selected-color"
-      @click="colorPickerVisibility = !colorPickerVisibility"
-    >
+    <div class="color-picker-container">
+      <div
+        id="selected-color"
+        @click="colorPickerVisibility = !colorPickerVisibility"
+      ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
         <ColorPickerV2 colorBoxWidth="250" colorBoxHeight="200" />
       </div>
@@ -50,11 +51,14 @@ export default defineComponent({
   width: 100%;
   padding: 2rem;
 }
+.color-picker-container {
+  position: relative;
+  margin: 1rem;
+}
 #selected-color {
   width: 50px;
   height: 50px;
   background-color: crimson;
-  margin: 1rem;
   position: relative;
 }
 #color-picker {
