@@ -6,7 +6,7 @@
       :width="colorBoxWidth"
       :height="colorBoxHeight"
       :style="{ backgroundColor: `hsl(${hsb.h}, 100%, 50%)` }"
-      @mousedown="isMouseDown = true"
+      @mousedown="newMarkerPos"
       @mousemove="newMarkerPos"
       @mouseup="isMouseDown = false"
     >
@@ -81,6 +81,9 @@ export default defineComponent({
   },
   methods: {
     newMarkerPos(e: MouseEvent) {
+      if (e.type === "mousedown") {
+        this.isMouseDown = true;
+      }
       if (this.isMouseDown) {
         const mouseX = (e.offsetX / this.colorBoxWidth) * 100;
         const mouseY = (e.offsetY / this.colorBoxHeight) * 100;
