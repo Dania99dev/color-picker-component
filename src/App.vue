@@ -1,8 +1,11 @@
 <template>
   <div id="app-container">
     <h1>ColorPicker Component vue.js</h1>
-    <div id="selected-color">
-      <div id="color-picker">
+    <div
+      id="selected-color"
+      @click="colorPickerVisibility = !colorPickerVisibility"
+    >
+      <div id="color-picker" v-if="colorPickerVisibility">
         <ColorPickerV2 />
       </div>
     </div>
@@ -18,6 +21,11 @@ export default defineComponent({
   name: "App",
   components: {
     ColorPickerV2
+  },
+  data() {
+    return {
+      colorPickerVisibility: false
+    };
   }
 });
 </script>
