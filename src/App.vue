@@ -6,7 +6,7 @@
       @click="colorPickerVisibility = !colorPickerVisibility"
     >
       <div id="color-picker" v-if="colorPickerVisibility">
-        <ColorPickerV2 />
+        <ColorPickerV2 colorBoxWidth="250" colorBoxHeight="200" />
       </div>
     </div>
   </div>
@@ -56,9 +56,6 @@ export default defineComponent({
   background-color: crimson;
   margin: 1rem;
   position: relative;
-}
-#selected-color:hover {
-  cursor: pointer;
 }
 #color-picker {
   position: absolute;
