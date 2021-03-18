@@ -115,9 +115,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
 }
-#color-box {
-  background-color: red;
-}
 #hue {
   appearance: none;
   margin: 0.75rem 0;
