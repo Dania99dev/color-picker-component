@@ -124,12 +124,75 @@ export default defineComponent({
 
       saturation = Math.round(saturation) <= 100 ? Math.round(saturation) : 100;
       lightness = Math.round(lightness) <= 100 ? Math.round(lightness) : 100;
-      return {
+
+      const res = {
         h: h,
         s: saturation,
         l: lightness
       };
+
+      return res;
+    },
+    HSBtoRGB: function(h: number, s: number, b: number): object {
+      h = h / 360;
+      s = s / 100;
+      b = b / 100;
+      let red = 1;
+      let green = 1;
+      let blue = 1;
+      const i = Math.floor(h * 6);
+      const f = h * 6 - i;
+      const p = b * (1 - s);
+      const q = b * (1 - f * s);
+      const t = b * (1 - (1 - f) * s);
+      switch (i % 6) {
+        case 0:
+          (red = b), (green = t), (blue = p);
+          break;
+        case 1:
+          (red = q), (green = b), (blue = p);
+          break;
+        case 2:
+          (red = p), (green = b), (blue = t);
+          break;
+        case 3:
+          (red = p), (green = q), (blue = b);
+          break;
+        case 4:
+          (red = t), (green = p), (blue = b);
+          break;
+        case 5:
+          (red = b), (green = p), (blue = q);
+          break;
+      }
+      const res = {
+        r: Math.round(red * 255),
+        g: Math.round(green * 255),
+        b: Math.round(blue * 255)
+      };
+
+      return res;
+    },
+    RGBtoHEX: function(r: number, g: number, b: number): object {
+      function componentToHex(c: number): string {
+        const hex = c.toString(16);
+        return hex.length == 1 ? "0" + hex : hex;
+      }
+      const res = {
+        r: componentToHex(r),
+        g: componentToHex(g),
+        b: componentToHex(b)
+      };
+      return res;
     }
+  },
+  created() {
+    const resHSBtoHSL = this.HSBtoHSL(340, 68, 49);
+    const resHSBtoRGB = this.HSBtoRGB(340, 68, 49);
+    const resRGBtoHEX = this.RGBtoHEX(125, 40, 68);
+    console.log(resHSBtoHSL);
+    console.log(resHSBtoRGB);
+    console.log(resRGBtoHEX);
   }
 });
 </script>
