@@ -2,12 +2,16 @@
 <template>
   <div class="container">
     <svg
+      ref="colorBox"
       id="color-box"
       :width="colorBoxWidth"
       :height="colorBoxHeight"
       :style="{
         backgroundColor: `hsl(${selectedColor.hsb.h}, 100%, 50%)`
       }"
+      @mousedown="
+        $emit('mouseIsDown', $event, $refs.colorBox.getBoundingClientRect())
+      "
     >
       <defs>
         <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -23,8 +27,8 @@
       <rect width="100%" height="100%" fill="url(#brightness)" />
       <circle
         id="white-marker"
-        :cx="`${selectedColor.hsb.s}%`"
-        :cy="`${100 - selectedColor.hsb.b}%`"
+        :cx="`${hsbSaturation}%`"
+        :cy="`${hsbBrightness}%`"
         r="6"
         stroke="white"
         stroke-width="2"
@@ -32,8 +36,8 @@
       />
       <circle
         id="black-marker"
-        :cx="`${selectedColor.hsb.s}%`"
-        :cy="`${100 - selectedColor.hsb.b}%`"
+        :cx="`${hsbSaturation}%`"
+        :cy="`${hsbBrightness}%`"
         r="4"
         stroke="black"
         stroke-width="2"
@@ -76,6 +80,14 @@ export default defineComponent({
     colorBoxHeight: {
       type: Number,
       reqired: true
+    },
+    hsbSaturation: {
+      type: Number,
+      required: true
+    },
+    hsbBrightness: {
+      type: Number,
+      required: true
     }
   },
   data() {

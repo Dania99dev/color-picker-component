@@ -1,5 +1,10 @@
 <template>
-  <div id="app-container">
+  <div
+    id="app-container"
+    @mouseup="isMouseDown = false"
+    @mousemove="newMousePos"
+  >
+    {{ isMouseDown }}
     <h1>ColorPicker Component vue.js</h1>
     <div class="color-picker-container">
       <div
@@ -7,7 +12,13 @@
         @click="colorPickerVisibility = !colorPickerVisibility"
       ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
-        <ColorPickerV2 :colorBoxWidth="250" :colorBoxHeight="200" />
+        <ColorPickerV2
+          :colorBoxWidth="250"
+          :colorBoxHeight="200"
+          @mouseIsDown="mouseIsDown"
+          :hsbSaturation="hsbS"
+          :hsbBrightness="hsbB"
+        />
       </div>
     </div>
   </div>
@@ -25,8 +36,35 @@ export default defineComponent({
   },
   data() {
     return {
-      colorPickerVisibility: false
+      colorPickerVisibility: false,
+      isMouseDown: false,
+      colorBoxProps: {} as DOMRect,
+      hsbS: 100,
+      hsbB: 0
     };
+  },
+  methods: {
+    mouseIsDown(e: MouseEvent, colorBoxProps: DOMRect) {
+      this.isMouseDown = true;
+      this.colorBoxProps = colorBoxProps;
+      this.newMousePos(e);
+    },
+    newMousePos(e: MouseEvent) {
+      if (this.isMouseDown) {
+        let hsbSaturation =
+          ((e.x - this.colorBoxProps.left) / this.colorBoxProps.width) * 100;
+        let hsbBrightness =
+          ((e.y - this.colorBoxProps.top) / this.colorBoxProps.height) * 100;
+
+        hsbSaturation = hsbSaturation <= 100 ? Math.round(hsbSaturation) : 100;
+        hsbSaturation = hsbSaturation >= 0 ? hsbSaturation : 0;
+        hsbBrightness = hsbBrightness <= 100 ? Math.round(hsbBrightness) : 100;
+        hsbBrightness = hsbBrightness >= 0 ? hsbBrightness : 0;
+
+        this.hsbS = hsbSaturation;
+        this.hsbB = hsbBrightness;
+      }
+    }
   }
 });
 </script>
