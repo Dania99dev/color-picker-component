@@ -103,6 +103,33 @@ export default defineComponent({
         }
       }
     };
+  },
+  methods: {
+    HSBtoHSL: function(h: number, s: number, b: number): object {
+      // Takes hsb where h[0, 360] s[0, 100] b[0, 100]
+      // Returns hsl where h[0, 360] l[0, 100] l[0, 100]
+      s = s / 100;
+      b = b / 100;
+      let saturation;
+      let lightness = b * (1 - s / 2);
+
+      if (lightness === 0 || lightness === 1) {
+        saturation = 0;
+      } else {
+        saturation = (b - lightness) / Math.min(lightness, 1 - lightness);
+      }
+
+      saturation = saturation * 100;
+      lightness = lightness * 100;
+
+      saturation = Math.round(saturation) <= 100 ? Math.round(saturation) : 100;
+      lightness = Math.round(lightness) <= 100 ? Math.round(lightness) : 100;
+      return {
+        h: h,
+        s: saturation,
+        l: lightness
+      };
+    }
   }
 });
 </script>
