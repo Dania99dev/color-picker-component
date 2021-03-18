@@ -27,8 +27,8 @@
       <rect width="100%" height="100%" fill="url(#brightness)" />
       <circle
         id="white-marker"
-        :cx="`${hsbSaturation}%`"
-        :cy="`${hsbBrightness}%`"
+        :cx="`${selectedColor.hsb.s}%`"
+        :cy="`${100 - selectedColor.hsb.b}%`"
         r="6"
         stroke="white"
         stroke-width="2"
@@ -36,8 +36,8 @@
       />
       <circle
         id="black-marker"
-        :cx="`${hsbSaturation}%`"
-        :cy="`${hsbBrightness}%`"
+        :cx="`${selectedColor.hsb.s}%`"
+        :cy="`${100 - selectedColor.hsb.b}%`"
         r="4"
         stroke="black"
         stroke-width="2"
@@ -198,13 +198,19 @@ export default defineComponent({
       return res;
     }
   },
-  created() {
-    const resHSBtoHSL = this.HSBtoHSL(340, 68, 49);
-    const resHSBtoRGB = this.HSBtoRGB(340, 68, 49);
-    const resRGBtoHEX = this.RGBtoHEX(125, 40, 68);
-    console.log(resHSBtoHSL);
-    console.log(resHSBtoRGB);
-    console.log(resRGBtoHEX);
+  watch: {
+    hsbSaturation(newSaturation) {
+      this.selectedColor.hsb.s = newSaturation;
+    },
+    hsbBrightness(newBrightness) {
+      this.selectedColor.hsb.b = newBrightness;
+    },
+    selectedColor: {
+      deep: true,
+      handler() {
+        // Sending up the SelectedColor here
+      }
+    }
   }
 });
 </script>

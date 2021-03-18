@@ -4,7 +4,6 @@
     @mouseup="isMouseDown = false"
     @mousemove="newMousePos"
   >
-    {{ isMouseDown }}
     <h1>ColorPicker Component vue.js</h1>
     <div class="color-picker-container">
       <div
@@ -54,6 +53,7 @@ export default defineComponent({
         let hsbSaturation =
           ((e.x - this.colorBoxProps.left) / this.colorBoxProps.width) * 100;
         let hsbBrightness =
+          100 -
           ((e.y - this.colorBoxProps.top) / this.colorBoxProps.height) * 100;
 
         hsbSaturation = hsbSaturation <= 100 ? Math.round(hsbSaturation) : 100;
