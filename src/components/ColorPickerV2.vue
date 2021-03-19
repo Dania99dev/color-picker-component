@@ -65,12 +65,11 @@
       </div>
     </div>
   </div>
-  {{ selectedColor }}
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
-import { HSB, HSL, RGB, HEX } from "@/types";
+import { HSB, HSL, RGB, HEX, ColorGroup } from "@/types";
 
 export default defineComponent({
   name: "ColorPickerV2",
@@ -115,7 +114,7 @@ export default defineComponent({
           g: "ff",
           b: "ff"
         } as HEX
-      }
+      } as ColorGroup
     };
   },
   methods: {
@@ -225,11 +224,11 @@ export default defineComponent({
     selectedColor: {
       deep: true,
       handler() {
-        // Sending up the SelectedColor here
+        this.$emit("colorChange", this.selectedColor);
       }
     }
   },
-  emits: ["mouseIsDown"]
+  emits: ["mouseIsDown", "colorChange"]
 });
 </script>
 
