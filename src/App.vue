@@ -12,7 +12,7 @@
         :style="{ backgroundColor: selectedColorRGB }"
       ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
-        <ColorPickerV2
+        <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
           @mouseIsDown="mouseIsDown"
@@ -28,13 +28,13 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 
-import ColorPickerV2 from "@/components/ColorPickerV2.vue";
+import ColorPicker from "@/components/ColorPicker.vue";
 import { ColorGroup } from "@/types";
 
 export default defineComponent({
   name: "App",
   components: {
-    ColorPickerV2
+    ColorPicker
   },
   data() {
     return {
