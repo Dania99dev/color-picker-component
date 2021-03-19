@@ -71,7 +71,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import { HSB, HSL, RGB, HEX, ColorGroup } from "@/types";
 
 export default defineComponent({
@@ -85,39 +85,14 @@ export default defineComponent({
       type: Number,
       reqired: true
     },
-    hsbSaturation: {
-      type: Number,
-      required: true
-    },
-    hsbBrightness: {
-      type: Number,
+    defaultColor: {
+      type: Object as PropType<HSB>,
       required: true
     }
   },
   data() {
     return {
-      selectedColor: {
-        hsb: {
-          h: 360,
-          s: this.hsbSaturation,
-          b: this.hsbBrightness
-        } as HSB,
-        hsl: {
-          h: 360,
-          s: 100,
-          l: 100
-        } as HSL,
-        rgb: {
-          r: 255,
-          g: 255,
-          b: 255
-        } as RGB,
-        hex: {
-          r: "ff",
-          g: "ff",
-          b: "ff"
-        } as HEX
-      } as ColorGroup
+      selectedColor: {} as ColorGroup
     };
   },
   methods: {
@@ -203,6 +178,15 @@ export default defineComponent({
 
       return res;
     }
+  },
+  created() {
+    this.selectedColor = {
+      hsb: this.defaultColor,
+      hsl: {} as HSL,
+      rgb: {} as RGB,
+      hex: {} as HEX
+    };
+    this.$emit("colorChange", this.selectedColor);
   },
   computed: {
     selectedColorHSB(): HSB {
@@ -300,16 +284,18 @@ export default defineComponent({
   width: 3rem;
   padding: 0.5rem;
   margin: 0 0.25rem;
-  border: 1px solid #949494;
+  border: 1px solid #f8f8f8;
   border-radius: 0.25rem;
+  background-color: #f8f8f8;
 }
 .color-prop input:focus {
   outline: none;
+  border: 1px solid #aaa;
 }
 .color-prop input::-webkit-inner-spin-button {
   appearance: none;
 }
 .color-string {
-  margin-top: 0.5rem;
+  margin-top: 0.75rem;
 }
 </style>

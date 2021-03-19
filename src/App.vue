@@ -4,12 +4,14 @@
     @mouseup="isMouseDown = false"
     @mousemove="newMousePos"
   >
-    <h1>ColorPicker Component vue.js</h1>
+    <h1 :style="{ color: defaultColorRGBstring }">
+      ColorPicker Component Vue.js
+    </h1>
     <div class="color-picker-container">
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{ backgroundColor: selectedColorRGB }"
+        :style="{ backgroundColor: defaultColorRGBstring }"
       ></div>
       <div id="color-picker" v-show="colorPickerVisibility">
         <ColorPicker
@@ -17,8 +19,7 @@
           :colorBoxHeight="200"
           @mouseIsDown="mouseIsDown"
           @colorChange="onColorChange"
-          :hsbSaturation="hsbS"
-          :hsbBrightness="hsbB"
+          :defaultColor="defaultColor"
         />
       </div>
     </div>
@@ -29,7 +30,7 @@
 import { defineComponent } from "vue";
 
 import ColorPicker from "@/components/ColorPicker.vue";
-import { ColorGroup } from "@/types";
+import { ColorGroup, HSB, RGB } from "@/types";
 
 export default defineComponent({
   name: "App",
@@ -41,12 +42,19 @@ export default defineComponent({
       colorPickerVisibility: false,
       isMouseDown: false,
       colorBoxProps: {} as DOMRect,
-      hsbS: 100,
-      hsbB: 100,
+      defaultColor: {
+        h: Math.round(Math.random() * 360),
+        s: 60,
+        b: 70
+      } as HSB,
+      defaultColorRGBstring: "",
       selectedColor: {} as ColorGroup
     };
   },
   methods: {
+    defaultColorRGBtoString(rgb: RGB): string {
+      return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
+    },
     mouseIsDown(e: MouseEvent, colorBoxProps: DOMRect) {
       this.isMouseDown = true;
       this.colorBoxProps = colorBoxProps;
@@ -65,21 +73,15 @@ export default defineComponent({
         hsbBrightness = hsbBrightness <= 100 ? Math.round(hsbBrightness) : 100;
         hsbBrightness = hsbBrightness >= 0 ? hsbBrightness : 0;
 
-        this.hsbS = hsbSaturation;
-        this.hsbB = hsbBrightness;
+        this.defaultColor.s = hsbSaturation;
+        this.defaultColor.b = hsbBrightness;
       }
     },
     onColorChange(newColor: ColorGroup) {
       this.selectedColor = newColor;
-    }
-  },
-  computed: {
-    selectedColorRGB(): string {
-      if (this.selectedColor.rgb !== undefined) {
-        return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
-      } else {
-        return "rgb(255, 0, 0)";
-      }
+      this.defaultColorRGBstring = this.defaultColorRGBtoString(
+        this.selectedColor.rgb
+      );
     }
   }
 });
@@ -103,7 +105,7 @@ export default defineComponent({
   align-items: center;
   min-height: 100vh;
   width: 100%;
-  padding: 2rem;
+  padding: 3rem;
 }
 .color-picker-container {
   position: relative;
@@ -112,7 +114,6 @@ export default defineComponent({
 #selected-color {
   width: 50px;
   height: 50px;
-  background-color: crimson;
   position: relative;
 }
 #color-picker {
