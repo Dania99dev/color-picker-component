@@ -38,7 +38,7 @@ export default defineComponent({
   },
   data() {
     return {
-      colorPickerVisibility: true,
+      colorPickerVisibility: false,
       isMouseDown: false,
       colorBoxProps: {} as DOMRect,
       hsbS: 100,
