@@ -9,12 +9,14 @@
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
+        :style="{ backgroundColor: selectedColorRGB }"
       ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
         <ColorPickerV2
           :colorBoxWidth="250"
           :colorBoxHeight="200"
           @mouseIsDown="mouseIsDown"
+          @colorChange="onColorChange"
           :hsbSaturation="hsbS"
           :hsbBrightness="hsbB"
         />
@@ -27,6 +29,7 @@
 import { defineComponent } from "vue";
 
 import ColorPickerV2 from "@/components/ColorPickerV2.vue";
+import { ColorGroup } from "@/types";
 
 export default defineComponent({
   name: "App",
@@ -35,11 +38,12 @@ export default defineComponent({
   },
   data() {
     return {
-      colorPickerVisibility: false,
+      colorPickerVisibility: true,
       isMouseDown: false,
       colorBoxProps: {} as DOMRect,
       hsbS: 100,
-      hsbB: 100
+      hsbB: 100,
+      selectedColor: {} as ColorGroup
     };
   },
   methods: {
@@ -63,6 +67,18 @@ export default defineComponent({
 
         this.hsbS = hsbSaturation;
         this.hsbB = hsbBrightness;
+      }
+    },
+    onColorChange(newColor: ColorGroup) {
+      this.selectedColor = newColor;
+    }
+  },
+  computed: {
+    selectedColorRGB(): string {
+      if (this.selectedColor.rgb !== undefined) {
+        return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
+      } else {
+        return "rgb(255, 0, 0)";
       }
     }
   }

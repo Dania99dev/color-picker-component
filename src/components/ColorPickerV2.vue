@@ -64,6 +64,9 @@
         <input type="number" v-model="selectedColor.hsb.b" min="0" max="100" />
       </div>
     </div>
+    <p class="color-string">{{ selectedColorHEX }}</p>
+    <p class="color-string">{{ selectedColorRGB }}</p>
+    <p class="color-string">{{ selectedColorHSL }}</p>
   </div>
 </template>
 
@@ -204,6 +207,15 @@ export default defineComponent({
   computed: {
     selectedColorHSB(): HSB {
       return this.selectedColor.hsb;
+    },
+    selectedColorHSL(): string {
+      return `hsl(${this.selectedColor.hsl.h}, ${this.selectedColor.hsl.s}%, ${this.selectedColor.hsl.l}%)`;
+    },
+    selectedColorRGB(): string {
+      return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
+    },
+    selectedColorHEX(): string {
+      return `#${this.selectedColor.hex.r}${this.selectedColor.hex.g}${this.selectedColor.hex.b}`;
     }
   },
   watch: {
@@ -239,6 +251,7 @@ export default defineComponent({
   padding: 1rem;
   display: flex;
   flex-direction: column;
+  font-size: 0.875rem;
 }
 #hue {
   appearance: none;
@@ -295,5 +308,8 @@ export default defineComponent({
 }
 .color-prop input::-webkit-inner-spin-button {
   appearance: none;
+}
+.color-string {
+  margin-top: 0.5rem;
 }
 </style>
