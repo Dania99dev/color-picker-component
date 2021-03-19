@@ -39,7 +39,7 @@ export default defineComponent({
       isMouseDown: false,
       colorBoxProps: {} as DOMRect,
       hsbS: 100,
-      hsbB: 0
+      hsbB: 100
     };
   },
   methods: {
