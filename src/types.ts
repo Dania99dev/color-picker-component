@@ -18,3 +18,9 @@ export interface HEX {
   g: string,
   b: string
 }
+export interface ColorGroup {
+  hsb: HSB,
+  hsl: HSL,
+  rgb: RGB,
+  hex: HEX
+}
