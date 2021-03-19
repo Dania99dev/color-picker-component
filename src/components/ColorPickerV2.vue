@@ -1,4 +1,3 @@
-// ! line 9 should be fixed after setting conversion functions
 <template>
   <div class="container">
     <svg
@@ -7,7 +6,7 @@
       :width="colorBoxWidth"
       :height="colorBoxHeight"
       :style="{
-        backgroundColor: `hsl(${selectedColor.hsb.h}, 100%, 50%)`
+        backgroundColor: `hsl(${selectedColor.hsl.h}, 100%, 50%)`
       }"
       @mousedown="
         $emit('mouseIsDown', $event, $refs.colorBox.getBoundingClientRect())
@@ -66,10 +65,13 @@
       </div>
     </div>
   </div>
+  {{ selectedColor }}
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
+import { HSB, HSL, RGB, HEX } from "@/types";
+
 export default defineComponent({
   name: "ColorPickerV2",
   props: {
@@ -95,33 +97,33 @@ export default defineComponent({
       selectedColor: {
         hsb: {
           h: 360,
-          s: 100,
-          b: 100
-        },
+          s: this.hsbSaturation,
+          b: this.hsbBrightness
+        } as HSB,
         hsl: {
           h: 360,
           s: 100,
           l: 100
-        },
+        } as HSL,
         rgb: {
           r: 255,
           g: 255,
           b: 255
-        },
+        } as RGB,
         hex: {
           r: "ff",
           g: "ff",
           b: "ff"
-        }
+        } as HEX
       }
     };
   },
   methods: {
-    HSBtoHSL: function(h: number, s: number, b: number): object {
+    HSBtoHSL: function(hsb: HSB): HSL {
       // Takes hsb where h[0, 360] s[0, 100] b[0, 100]
       // Returns hsl where h[0, 360] l[0, 100] l[0, 100]
-      s = s / 100;
-      b = b / 100;
+      const s = hsb.s / 100;
+      const b = hsb.b / 100;
       let saturation;
       let lightness = b * (1 - s / 2);
 
@@ -138,17 +140,18 @@ export default defineComponent({
       lightness = Math.round(lightness) <= 100 ? Math.round(lightness) : 100;
 
       const res = {
-        h: h,
+        h: hsb.h,
         s: saturation,
         l: lightness
       };
 
       return res;
     },
-    HSBtoRGB: function(h: number, s: number, b: number): object {
-      h = h / 360;
-      s = s / 100;
-      b = b / 100;
+    HSBtoRGB: function(hsb: HSB): RGB {
+      const h = hsb.h / 360;
+      const s = hsb.s / 100;
+      const b = hsb.b / 100;
+
       let red = 1;
       let green = 1;
       let blue = 1;
@@ -185,25 +188,39 @@ export default defineComponent({
 
       return res;
     },
-    RGBtoHEX: function(r: number, g: number, b: number): object {
+    RGBtoHEX: function(rgb: RGB): HEX {
       function componentToHex(c: number): string {
         const hex = c.toString(16);
         return hex.length == 1 ? "0" + hex : hex;
       }
       const res = {
-        r: componentToHex(r),
-        g: componentToHex(g),
-        b: componentToHex(b)
+        r: componentToHex(rgb.r),
+        g: componentToHex(rgb.g),
+        b: componentToHex(rgb.b)
       };
+
       return res;
     }
   },
+  computed: {
+    selectedColorHSB(): HSB {
+      return this.selectedColor.hsb;
+    }
+  },
   watch: {
-    hsbSaturation(newSaturation) {
-      this.selectedColor.hsb.s = newSaturation;
+    hsbSaturation(newVal) {
+      this.selectedColor.hsb.s = newVal;
     },
-    hsbBrightness(newBrightness) {
-      this.selectedColor.hsb.b = newBrightness;
+    hsbBrightness(newVal) {
+      this.selectedColor.hsb.b = newVal;
+    },
+    selectedColorHSB: {
+      deep: true,
+      handler() {
+        this.selectedColor.hsl = this.HSBtoHSL(this.selectedColor.hsb);
+        this.selectedColor.rgb = this.HSBtoRGB(this.selectedColor.hsb);
+        this.selectedColor.hex = this.RGBtoHEX(this.selectedColor.rgb);
+      }
     },
     selectedColor: {
       deep: true,
@@ -211,7 +228,8 @@ export default defineComponent({
         // Sending up the SelectedColor here
       }
     }
-  }
+  },
+  emits: ["mouseIsDown"]
 });
 </script>
 
