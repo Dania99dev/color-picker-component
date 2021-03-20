@@ -1,8 +1,6 @@
 # color-picker-component
 
-<div style="text-align: center">
-<img src="https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.png" width="50%">
-</div>
+![ColorPicker](https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.png)
 
 ## Project setup
 
