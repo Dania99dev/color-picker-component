@@ -1,6 +1,6 @@
 # color-picker-component
 
-![ColorPicker](https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.png)
+![ColorPicker](https://github.com/Dania99dev/color-picker-component/blob/main/demo/Demo.png)
 
 ## Project setup
 
