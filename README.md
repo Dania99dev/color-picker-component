@@ -1,29 +1,28 @@
 # color-picker-component
 
-<img src="https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.png" width="50%">
-<img src="https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.gif" width="50%">
+<img src="https://github.com/Dania99dev/color-picker-component/blob/main/demo/ColorPicker.png" width="50%" align="center">
 
 ## Project setup
 
-```
+```Bash
 npm install
 ```
 
 ### Compiles and hot-reloads for development
 
-```
+```Bash
 npm run serve
 ```
 
 ### Compiles and minifies for production
 
-```
+```Bash
 npm run build
 ```
 
 ### Lints and fixes files
 
-```
+```Bash
 npm run lint
 ```
 
