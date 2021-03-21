@@ -56,6 +56,7 @@ export default defineComponent({
       return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
     },
     mouseIsDown(e: MouseEvent, colorBoxProps: DOMRect) {
+      e.preventDefault();
       this.isMouseDown = true;
       this.colorBoxProps = colorBoxProps;
       this.newMousePos(e);
@@ -88,14 +89,6 @@ export default defineComponent({
 </script>
 
 <style>
-body {
-  -webkit-touch-callout: none;
-  -webkit-user-select: none;
-  -khtml-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
 * {
   margin: 0;
   padding: 0;
