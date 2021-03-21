@@ -2,7 +2,7 @@
   <div
     id="app-container"
     @mouseup="isMouseDown = false"
-    @mousemove.prevent="newMousePos"
+    @mousemove="newMousePos"
   >
     <h1 :style="{ color: defaultColorRGBstring }">
       ColorPicker Component Vue.js
@@ -88,6 +88,14 @@ export default defineComponent({
 </script>
 
 <style>
+body {
+  -webkit-touch-callout: none;
+  -webkit-user-select: none;
+  -khtml-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
 * {
   margin: 0;
   padding: 0;
