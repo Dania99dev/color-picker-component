@@ -9,7 +9,7 @@
         @click="colorPickerVisibility = !colorPickerVisibility"
         :style="{ backgroundColor: selectedColorRGBstring }"
       ></div>
-      <div id="color-picker" v-show="colorPickerVisibility">
+      <div v-show="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
