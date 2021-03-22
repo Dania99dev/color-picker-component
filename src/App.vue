@@ -1,21 +1,20 @@
 <template>
   <div id="app-container">
-    <h1 :style="{ color: defaultColorRGBstring || 'rgb(0, 150, 100)' }">
+    <h1 :style="{ color: defaultColorRGBstring }">
       ColorPicker Component Vue.js
     </h1>
     <div class="color-picker-container">
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{
-          backgroundColor: defaultColorRGBstring || 'rgb(0, 150, 100)'
-        }"
+        :style="{ backgroundColor: defaultColorRGBstring }"
       ></div>
       <div id="color-picker" v-if="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
           :defaultColor="defaultColor"
+          @colorChange="onColorChange"
         />
       </div>
     </div>
@@ -55,6 +54,12 @@ export default defineComponent({
         this.selectedColor.rgb
       );
     }
+  },
+  beforeMount() {
+    this.colorPickerVisibility = true;
+  },
+  mounted() {
+    this.colorPickerVisibility = false;
   }
 });
 </script>

@@ -92,10 +92,44 @@ export default defineComponent({
   },
   data() {
     return {
+      isMouseDown: false,
+      colorBoxProps: {} as DOMRect | undefined,
       selectedColor: {} as ColorGroup
     };
   },
   methods: {
+    newMousePos: function(e: MouseEvent) {
+      if (e.type === "mousedown") {
+        e.preventDefault();
+        this.isMouseDown = true;
+        this.colorBoxProps = document
+          .querySelector("#color-box")
+          ?.getBoundingClientRect();
+        this.setNewMarkerPos(e);
+      }
+      if (e.type === "mouseup") {
+        this.isMouseDown = false;
+      }
+      if (e.type === "mousemove" && this.isMouseDown === true) {
+        this.setNewMarkerPos(e);
+      }
+    },
+    setNewMarkerPos(e: MouseEvent) {
+      if (this.colorBoxProps) {
+        let markerLeft =
+          ((e.x - this.colorBoxProps.left) / this.colorBoxProps.width) * 100;
+        let markerTop =
+          ((e.y - this.colorBoxProps.top) / this.colorBoxProps.height) * 100;
+
+        markerLeft = markerLeft > 100 ? 100 : markerLeft;
+        markerTop = markerTop > 100 ? 100 : markerTop;
+        markerLeft = markerLeft < 0 ? 0 : markerLeft;
+        markerTop = markerTop < 0 ? 0 : markerTop;
+
+        this.selectedColor.hsb.s = Math.round(markerLeft);
+        this.selectedColor.hsb.b = Math.round(100 - markerTop);
+      }
+    },
     HSBtoHSL: function(hsb: HSB): HSL {
       // Takes hsb where h[0, 360] s[0, 100] b[0, 100]
       // Returns hsl where h[0, 360] l[0, 100] l[0, 100]
@@ -188,6 +222,19 @@ export default defineComponent({
     };
     this.$emit("colorChange", this.selectedColor);
   },
+  mounted() {
+    const colorBox = document.getElementById("color-box");
+    if (colorBox) {
+      colorBox.addEventListener("mousedown", this.newMousePos);
+    }
+    window.addEventListener("mousemove", this.newMousePos);
+    window.addEventListener("mouseup", this.newMousePos);
+  },
+  unmounted() {
+    window.removeEventListener("mousedown", this.newMousePos);
+    window.removeEventListener("mousemove", this.newMousePos);
+    window.removeEventListener("mouseup", this.newMousePos);
+  },
   computed: {
     selectedColorHSB(): HSB {
       return this.selectedColor.hsb;
@@ -203,6 +250,9 @@ export default defineComponent({
     }
   },
   watch: {
+    colorBoxProps(newVal) {
+      this.colorBoxProps = newVal;
+    },
     hsbSaturation(newVal) {
       this.selectedColor.hsb.s = newVal;
     },
