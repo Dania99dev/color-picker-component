@@ -1,24 +1,20 @@
 <template>
-  <div
-    id="app-container"
-    @mouseup="isMouseDown = false"
-    @mousemove="newMousePos"
-  >
-    <h1 :style="{ color: defaultColorRGBstring }">
+  <div id="app-container">
+    <h1 :style="{ color: defaultColorRGBstring || 'rgb(0, 150, 100)' }">
       ColorPicker Component Vue.js
     </h1>
     <div class="color-picker-container">
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{ backgroundColor: defaultColorRGBstring }"
+        :style="{
+          backgroundColor: defaultColorRGBstring || 'rgb(0, 150, 100)'
+        }"
       ></div>
-      <div id="color-picker" v-show="colorPickerVisibility">
+      <div id="color-picker" v-if="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
-          @mouseIsDown="mouseIsDown"
-          @colorChange="onColorChange"
           :defaultColor="defaultColor"
         />
       </div>
@@ -40,8 +36,6 @@ export default defineComponent({
   data() {
     return {
       colorPickerVisibility: false,
-      isMouseDown: false,
-      colorBoxProps: {} as DOMRect,
       defaultColor: {
         h: Math.round(Math.random() * 360),
         s: 60,
@@ -54,29 +48,6 @@ export default defineComponent({
   methods: {
     defaultColorRGBtoString(rgb: RGB): string {
       return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-    },
-    mouseIsDown(e: MouseEvent, colorBoxProps: DOMRect) {
-      e.preventDefault();
-      this.isMouseDown = true;
-      this.colorBoxProps = colorBoxProps;
-      this.newMousePos(e);
-    },
-    newMousePos(e: MouseEvent) {
-      if (this.isMouseDown) {
-        let hsbSaturation =
-          ((e.x - this.colorBoxProps.left) / this.colorBoxProps.width) * 100;
-        let hsbBrightness =
-          100 -
-          ((e.y - this.colorBoxProps.top) / this.colorBoxProps.height) * 100;
-
-        hsbSaturation = hsbSaturation <= 100 ? Math.round(hsbSaturation) : 100;
-        hsbSaturation = hsbSaturation >= 0 ? hsbSaturation : 0;
-        hsbBrightness = hsbBrightness <= 100 ? Math.round(hsbBrightness) : 100;
-        hsbBrightness = hsbBrightness >= 0 ? hsbBrightness : 0;
-
-        this.defaultColor.s = hsbSaturation;
-        this.defaultColor.b = hsbBrightness;
-      }
     },
     onColorChange(newColor: ColorGroup) {
       this.selectedColor = newColor;
