@@ -279,6 +279,9 @@ export default defineComponent({
 
 <style scoped>
 .container {
+  position: absolute;
+  top: 10%;
+  left: 110%;
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.1);
   border-radius: 0.5rem;
   padding: 1rem;

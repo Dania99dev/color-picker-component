@@ -83,9 +83,4 @@ export default defineComponent({
   width: 50px;
   height: 50px;
 }
-#color-picker {
-  position: absolute;
-  left: 110%;
-  top: 10%;
-}
 </style>
