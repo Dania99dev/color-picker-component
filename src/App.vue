@@ -1,25 +1,20 @@
 <template>
-  <div
-    id="app-container"
-    @mouseup="isMouseDown = false"
-    @mousemove="newMousePos"
-  >
-    <h1 :style="{ color: defaultColorRGBstring }">
+  <div id="app-container">
+    <h1 :style="{ color: selectedColorRGBstring }">
       ColorPicker Component Vue.js
     </h1>
     <div class="color-picker-container">
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{ backgroundColor: defaultColorRGBstring }"
+        :style="{ backgroundColor: selectedColorRGBstring }"
       ></div>
       <div id="color-picker" v-show="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
-          @mouseIsDown="mouseIsDown"
-          @colorChange="onColorChange"
           :defaultColor="defaultColor"
+          @colorChange="newColor => (this.selectedColor = newColor)"
         />
       </div>
     </div>
@@ -28,9 +23,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 import ColorPicker from "@/components/ColorPicker.vue";
-import { ColorGroup, HSB, RGB } from "@/types";
+import { ColorGroup, HSB, HSL, RGB, HEX } from "@/types";
 
 export default defineComponent({
   name: "App",
@@ -40,49 +34,22 @@ export default defineComponent({
   data() {
     return {
       colorPickerVisibility: false,
-      isMouseDown: false,
-      colorBoxProps: {} as DOMRect,
       defaultColor: {
-        h: Math.round(Math.random() * 360),
-        s: 60,
-        b: 70
+        h: 345,
+        s: 80,
+        b: 90
       } as HSB,
-      defaultColorRGBstring: "",
-      selectedColor: {} as ColorGroup
+      selectedColor: {
+        hsb: {} as HSB,
+        hsl: {} as HSL,
+        rgb: {} as RGB,
+        hex: {} as HEX
+      } as ColorGroup
     };
   },
-  methods: {
-    defaultColorRGBtoString(rgb: RGB): string {
-      return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-    },
-    mouseIsDown(e: MouseEvent, colorBoxProps: DOMRect) {
-      e.preventDefault();
-      this.isMouseDown = true;
-      this.colorBoxProps = colorBoxProps;
-      this.newMousePos(e);
-    },
-    newMousePos(e: MouseEvent) {
-      if (this.isMouseDown) {
-        let hsbSaturation =
-          ((e.x - this.colorBoxProps.left) / this.colorBoxProps.width) * 100;
-        let hsbBrightness =
-          100 -
-          ((e.y - this.colorBoxProps.top) / this.colorBoxProps.height) * 100;
-
-        hsbSaturation = hsbSaturation <= 100 ? Math.round(hsbSaturation) : 100;
-        hsbSaturation = hsbSaturation >= 0 ? hsbSaturation : 0;
-        hsbBrightness = hsbBrightness <= 100 ? Math.round(hsbBrightness) : 100;
-        hsbBrightness = hsbBrightness >= 0 ? hsbBrightness : 0;
-
-        this.defaultColor.s = hsbSaturation;
-        this.defaultColor.b = hsbBrightness;
-      }
-    },
-    onColorChange(newColor: ColorGroup) {
-      this.selectedColor = newColor;
-      this.defaultColorRGBstring = this.defaultColorRGBtoString(
-        this.selectedColor.rgb
-      );
+  computed: {
+    selectedColorRGBstring(): string {
+      return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
     }
   }
 });
@@ -115,7 +82,6 @@ export default defineComponent({
 #selected-color {
   width: 50px;
   height: 50px;
-  position: relative;
 }
 #color-picker {
   position: absolute;
