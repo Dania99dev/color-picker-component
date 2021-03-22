@@ -71,8 +71,6 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100vh;
-  width: 100%;
   padding: 3rem;
 }
 .color-picker-container {
