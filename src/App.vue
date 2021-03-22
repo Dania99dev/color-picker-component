@@ -9,7 +9,7 @@
         @click="colorPickerVisibility = !colorPickerVisibility"
         :style="{ backgroundColor: selectedColorRGBstring }"
       ></div>
-      <div v-show="colorPickerVisibility">
+      <div v-if="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
@@ -46,6 +46,12 @@ export default defineComponent({
         hex: {} as HEX
       } as ColorGroup
     };
+  },
+  beforeMount() {
+    this.colorPickerVisibility = true;
+    this.$nextTick(() => {
+      this.colorPickerVisibility = false;
+    });
   },
   computed: {
     selectedColorRGBstring(): string {

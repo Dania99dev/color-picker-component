@@ -1,7 +1,6 @@
 <template>
   <div class="container">
     <svg
-      ref="colorBox"
       id="color-box"
       :width="colorBoxWidth"
       :height="colorBoxHeight"
@@ -223,14 +222,13 @@ export default defineComponent({
   },
   mounted() {
     const colorBox = document.getElementById("color-box");
-    if (colorBox) {
-      colorBox.addEventListener("mousedown", this.newMousePos);
-    }
+    colorBox?.addEventListener("mousedown", this.newMousePos);
     window.addEventListener("mousemove", this.newMousePos);
     window.addEventListener("mouseup", this.newMousePos);
   },
-  unmounted() {
-    window.removeEventListener("mousedown", this.newMousePos);
+  beforeUnmount() {
+    const colorBox = document.getElementById("color-box");
+    colorBox?.removeEventListener("mousedown", this.newMousePos);
     window.removeEventListener("mousemove", this.newMousePos);
     window.removeEventListener("mouseup", this.newMousePos);
   },
@@ -249,9 +247,6 @@ export default defineComponent({
     }
   },
   watch: {
-    colorBoxProps(newVal) {
-      this.colorBoxProps = newVal;
-    },
     hsbSaturation(newVal) {
       this.selectedColor.hsb.s = newVal;
     },
