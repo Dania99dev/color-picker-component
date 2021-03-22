@@ -8,9 +8,6 @@
       :style="{
         backgroundColor: `hsl(${selectedColor.hsl.h}, 100%, 50%)`
       }"
-      @mousedown="
-        $emit('mouseIsDown', $event, $refs.colorBox.getBoundingClientRect())
-      "
     >
       <defs>
         <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
@@ -98,7 +95,7 @@ export default defineComponent({
     };
   },
   methods: {
-    newMousePos: function(e: MouseEvent) {
+    newMousePos(e: MouseEvent) {
       if (e.type === "mousedown") {
         e.preventDefault();
         this.isMouseDown = true;
@@ -106,12 +103,15 @@ export default defineComponent({
           .querySelector("#color-box")
           ?.getBoundingClientRect();
         this.setNewMarkerPos(e);
+        return;
       }
       if (e.type === "mouseup") {
         this.isMouseDown = false;
+        return;
       }
       if (e.type === "mousemove" && this.isMouseDown === true) {
         this.setNewMarkerPos(e);
+        return;
       }
     },
     setNewMarkerPos(e: MouseEvent) {
@@ -273,7 +273,7 @@ export default defineComponent({
       }
     }
   },
-  emits: ["mouseIsDown", "colorChange"]
+  emits: ["colorChange"]
 });
 </script>
 
