@@ -1,20 +1,20 @@
 <template>
   <div id="app-container">
-    <h1 :style="{ color: defaultColorRGBstring }">
+    <h1 :style="{ color: selectedColorRGBstring }">
       ColorPicker Component Vue.js
     </h1>
     <div class="color-picker-container">
       <div
         id="selected-color"
         @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{ backgroundColor: defaultColorRGBstring }"
+        :style="{ backgroundColor: selectedColorRGBstring }"
       ></div>
-      <div id="color-picker" v-if="colorPickerVisibility">
+      <div id="color-picker" v-show="colorPickerVisibility">
         <ColorPicker
           :colorBoxWidth="250"
           :colorBoxHeight="200"
           :defaultColor="defaultColor"
-          @colorChange="onColorChange"
+          @colorChange="newColor => (this.selectedColor = newColor)"
         />
       </div>
     </div>
@@ -23,9 +23,8 @@
 
 <script lang="ts">
 import { defineComponent } from "vue";
-
 import ColorPicker from "@/components/ColorPicker.vue";
-import { ColorGroup, HSB, RGB } from "@/types";
+import { ColorGroup, HSB, HSL, RGB, HEX } from "@/types";
 
 export default defineComponent({
   name: "App",
@@ -36,30 +35,22 @@ export default defineComponent({
     return {
       colorPickerVisibility: false,
       defaultColor: {
-        h: Math.round(Math.random() * 360),
-        s: 60,
-        b: 70
+        h: 345,
+        s: 80,
+        b: 90
       } as HSB,
-      defaultColorRGBstring: "",
-      selectedColor: {} as ColorGroup
+      selectedColor: {
+        hsb: {} as HSB,
+        hsl: {} as HSL,
+        rgb: {} as RGB,
+        hex: {} as HEX
+      } as ColorGroup
     };
   },
-  methods: {
-    defaultColorRGBtoString(rgb: RGB): string {
-      return `rgb(${rgb.r}, ${rgb.g}, ${rgb.b})`;
-    },
-    onColorChange(newColor: ColorGroup) {
-      this.selectedColor = newColor;
-      this.defaultColorRGBstring = this.defaultColorRGBtoString(
-        this.selectedColor.rgb
-      );
+  computed: {
+    selectedColorRGBstring(): string {
+      return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
     }
-  },
-  beforeMount() {
-    this.colorPickerVisibility = true;
-  },
-  mounted() {
-    this.colorPickerVisibility = false;
   }
 });
 </script>
@@ -91,7 +82,6 @@ export default defineComponent({
 #selected-color {
   width: 50px;
   height: 50px;
-  position: relative;
 }
 #color-picker {
   position: absolute;
