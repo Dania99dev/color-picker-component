@@ -220,7 +220,6 @@ export default defineComponent({
       rgb: {} as RGB,
       hex: {} as HEX
     };
-    this.$emit("colorChange", this.selectedColor);
   },
   mounted() {
     const colorBox = document.getElementById("color-box");
