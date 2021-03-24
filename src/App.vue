@@ -14,7 +14,7 @@
           :colorBoxWidth="250"
           :colorBoxHeight="200"
           :defaultColor="defaultColor"
-          @colorChange="newColor => (this.selectedColor = newColor)"
+          @colorChange="newColor => (selectedColor = newColor)"
         />
       </div>
     </div>
