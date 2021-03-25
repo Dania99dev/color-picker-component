@@ -283,6 +283,7 @@ export default defineComponent({
   display: flex;
   flex-direction: column;
   font-size: 0.875rem;
+  background-color: white;
 }
 #hue {
   appearance: none;
