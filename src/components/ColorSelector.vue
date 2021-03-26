@@ -79,7 +79,7 @@
         <input type="number" v-model="selectedColor.hsb.b" min="0" max="100" />
       </div>
     </div>
-    <p class="color-string">{{ selectedColorHEX }}</p>
+    <p class="color-string">{{ selectedColorHEX.toUpperCase() }}</p>
     <p class="color-string">{{ selectedColorRGB }}</p>
     <p class="color-string">{{ selectedColorHSL }}</p>
   </div>
