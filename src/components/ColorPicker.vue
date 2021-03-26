@@ -88,7 +88,7 @@ span[id$="-color-sample"] {
   border-radius: 0.5rem;
 }
 span[id$="-color-code"] {
-  background-color: #f5f5f5;
+  background-color: #fafafa;
   height: 40px;
   padding: 0.5rem;
   display: flex;

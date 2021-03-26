@@ -1,27 +1,47 @@
 <template>
   <div class="container">
     <svg
-      id="color-box"
+      :id="`${colorName}-color-box`"
       :width="colorBoxWidth"
       :height="colorBoxHeight"
       :style="{
         backgroundColor: `hsl(${selectedColor.hsl.h}, 100%, 50%)`
       }"
+      @mousedown="newMousePos"
     >
       <defs>
-        <linearGradient id="saturation" x1="0%" y1="0%" x2="100%" y2="0%">
+        <linearGradient
+          :id="`${colorName}-color-saturation`"
+          x1="0%"
+          y1="0%"
+          x2="100%"
+          y2="0%"
+        >
           <stop offset="0%" style="stop-color:rgba(255,255,255,1)" />
           <stop offset="100%" style="stop-color:rgba(255,255,255,0)" />
         </linearGradient>
-        <linearGradient id="brightness" x1="0%" y1="100%" x2="0%" y2="0%">
+        <linearGradient
+          :id="`${colorName}-color-brightness`"
+          x1="0%"
+          y1="100%"
+          x2="0%"
+          y2="0%"
+        >
           <stop offset="0%" style="stop-color:rgba(0,0,0,1)" />
           <stop offset="100%" style="stop-color:rgba(0,0,0,0)" />
         </linearGradient>
       </defs>
-      <rect width="100%" height="100%" fill="url(#saturation)" />
-      <rect width="100%" height="100%" fill="url(#brightness)" />
+      <rect
+        width="100%"
+        height="100%"
+        :fill="`url(#${colorName}-color-saturation)`"
+      />
+      <rect
+        width="100%"
+        height="100%"
+        :fill="`url(#${colorName}-color-brightness)`"
+      />
       <circle
-        id="white-marker"
         :cx="`${selectedColor.hsb.s}%`"
         :cy="`${100 - selectedColor.hsb.b}%`"
         r="6"
@@ -30,7 +50,6 @@
         fill="transparent"
       />
       <circle
-        id="black-marker"
         :cx="`${selectedColor.hsb.s}%`"
         :cy="`${100 - selectedColor.hsb.b}%`"
         r="4"
@@ -84,6 +103,10 @@ export default defineComponent({
     defaultColor: {
       type: Object as PropType<HSB>,
       required: true
+    },
+    colorName: {
+      type: String,
+      required: true
     }
   },
   data() {
@@ -99,7 +122,7 @@ export default defineComponent({
         e.preventDefault();
         this.isMouseDown = true;
         this.colorBoxProps = document
-          .querySelector("#color-box")
+          .querySelector(`#${this.colorName}-color-box`)
           ?.getBoundingClientRect();
         this.setNewMarkerPos(e);
         return;
@@ -221,14 +244,10 @@ export default defineComponent({
     };
   },
   mounted() {
-    const colorBox = document.getElementById("color-box");
-    colorBox?.addEventListener("mousedown", this.newMousePos);
     window.addEventListener("mousemove", this.newMousePos);
     window.addEventListener("mouseup", this.newMousePos);
   },
   beforeUnmount() {
-    const colorBox = document.getElementById("color-box");
-    colorBox?.removeEventListener("mousedown", this.newMousePos);
     window.removeEventListener("mousemove", this.newMousePos);
     window.removeEventListener("mouseup", this.newMousePos);
   },
@@ -329,13 +348,13 @@ export default defineComponent({
   width: 3rem;
   padding: 0.5rem;
   margin: 0 0.25rem;
-  border: 1px solid #f8f8f8;
+  border: 1px solid #fafafa;
   border-radius: 0.25rem;
-  background-color: #f8f8f8;
+  background-color: #fafafa;
 }
 .color-prop input:focus {
   outline: none;
-  border: 1px solid #aaa;
+  border: 1px solid #a3a3a3;
 }
 .color-prop input::-webkit-inner-spin-button {
   appearance: none;
