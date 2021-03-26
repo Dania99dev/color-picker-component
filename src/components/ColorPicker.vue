@@ -8,7 +8,11 @@
     <span :id="`${colorName}-color-code`">{{
       selectedColorHEXstring.toUpperCase()
     }}</span>
-    <div class="color-selector-container" v-if="colorSelectorVisibility">
+    <div
+      class="color-selector-container"
+      v-if="colorSelectorVisibility"
+      :style="colorSelectorPositioning"
+    >
       <ColorSelector
         :colorBoxWidth="250"
         :colorBoxHeight="200"
@@ -33,11 +37,15 @@ export default defineComponent({
   props: {
     colorName: {
       type: String,
-      reqired: true
+      required: true
     },
     defaultColor: {
       type: Object as PropType<HSB>,
-      reqired: true
+      required: true
+    },
+    colorSelectorPositioning: {
+      type: Object,
+      required: true
     }
   },
   data() {
@@ -77,8 +85,6 @@ export default defineComponent({
 }
 .color-selector-container {
   position: absolute;
-  left: 105%;
-  top: 10%;
 }
 span[id$="-color-sample"] {
   display: inline-block;

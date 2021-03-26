@@ -94,11 +94,11 @@ export default defineComponent({
   props: {
     colorBoxWidth: {
       type: Number,
-      reqired: true
+      required: true
     },
     colorBoxHeight: {
       type: Number,
-      reqired: true
+      required: true
     },
     defaultColor: {
       type: Object as PropType<HSB>,

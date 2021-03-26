@@ -3,7 +3,11 @@
     <h1>
       ColorPicker Component Vue.js
     </h1>
-    <ColorPicker colorName="primary" :defaultColor="primaryDefault" />
+    <ColorPicker
+      colorName="primary"
+      :defaultColor="primaryDefault"
+      :colorSelectorPositioning="{ top: '0%', left: '102%' }"
+    />
   </div>
 </template>
 
