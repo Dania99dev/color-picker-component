@@ -21,7 +21,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent, PropType } from "vue";
 import ColorSelector from "@/components/ColorSelector.vue";
 import { ColorGroup, HSB, HSL, RGB, HEX } from "@/types";
 
@@ -34,16 +34,15 @@ export default defineComponent({
     colorName: {
       type: String,
       reqired: true
+    },
+    defaultColor: {
+      type: Object as PropType<HSB>,
+      reqired: true
     }
   },
   data() {
     return {
       colorSelectorVisibility: false,
-      defaultColor: {
-        h: 345,
-        s: 80,
-        b: 90
-      } as HSB,
       selectedColor: {
         hsb: {} as HSB,
         hsl: {} as HSL,

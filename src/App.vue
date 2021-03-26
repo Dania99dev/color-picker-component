@@ -3,13 +3,14 @@
     <h1>
       ColorPicker Component Vue.js
     </h1>
-    <ColorPicker colorName="primary" />
+    <ColorPicker colorName="primary" :defaultColor="primaryDefault" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import ColorPicker from "@/components/ColorPicker.vue";
+import { HSB } from "./types";
 
 export default defineComponent({
   name: "App",
@@ -17,7 +18,13 @@ export default defineComponent({
     ColorPicker
   },
   data() {
-    return {};
+    return {
+      primaryDefault: {
+        h: 345,
+        s: 80,
+        b: 90
+      } as HSB
+    };
   }
 });
 </script>
