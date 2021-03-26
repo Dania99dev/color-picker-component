@@ -1,30 +1,15 @@
 <template>
   <div id="app-container">
-    <h1 :style="{ color: selectedColorRGBstring }">
+    <h1>
       ColorPicker Component Vue.js
     </h1>
-    <div class="color-picker-container">
-      <div
-        id="selected-color"
-        @click="colorPickerVisibility = !colorPickerVisibility"
-        :style="{ backgroundColor: selectedColorRGBstring }"
-      ></div>
-      <div v-if="colorPickerVisibility">
-        <ColorPicker
-          :colorBoxWidth="250"
-          :colorBoxHeight="200"
-          :defaultColor="defaultColor"
-          @colorChange="newColor => (selectedColor = newColor)"
-        />
-      </div>
-    </div>
+    <ColorPicker colorName="primary" />
   </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue";
 import ColorPicker from "@/components/ColorPicker.vue";
-import { ColorGroup, HSB, HSL, RGB, HEX } from "@/types";
 
 export default defineComponent({
   name: "App",
@@ -32,31 +17,7 @@ export default defineComponent({
     ColorPicker
   },
   data() {
-    return {
-      colorPickerVisibility: false,
-      defaultColor: {
-        h: 345,
-        s: 80,
-        b: 90
-      } as HSB,
-      selectedColor: {
-        hsb: {} as HSB,
-        hsl: {} as HSL,
-        rgb: {} as RGB,
-        hex: {} as HEX
-      } as ColorGroup
-    };
-  },
-  beforeMount() {
-    this.colorPickerVisibility = true;
-    this.$nextTick(() => {
-      this.colorPickerVisibility = false;
-    });
-  },
-  computed: {
-    selectedColorRGBstring(): string {
-      return `rgb(${this.selectedColor.rgb.r}, ${this.selectedColor.rgb.g}, ${this.selectedColor.rgb.b})`;
-    }
+    return {};
   }
 });
 </script>
@@ -78,13 +39,5 @@ export default defineComponent({
   flex-direction: column;
   align-items: center;
   padding: 3rem;
-}
-.color-picker-container {
-  position: relative;
-  margin: 1rem;
-}
-#selected-color {
-  width: 50px;
-  height: 50px;
 }
 </style>
